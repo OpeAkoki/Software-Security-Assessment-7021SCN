@@ -14,9 +14,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Semgrep
+        run: pip install semgrep
+
       - name: Run Semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: >-
-            p/c
-            p/owasp-top-ten
+        run: semgrep scan --config p/c --config p/owasp-top-ten --error .
