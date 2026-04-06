@@ -1,0 +1,43 @@
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 11 files tracked by git with 546 Code rules:
+                                                                                                                        
+  Language      Rules   Files          Origin      Rules                                                                
+ ─────────────────────────────        ───────────────────                                                               
+  <multilang>       5      11          Community     546                                                                
+  c                 2       2                                                                                           
+  yaml             19       1                                                                                           
+                                                                                                                        
+                   
+                   
+┌─────────────────┐
+│ 2 Code Findings │
+└─────────────────┘
+                                     
+    task-a-vulnerability/vulnerable.c
+   ❯❯❱ c.lang.security.insecure-use-gets-fn.insecure-use-gets-fn
+          ❰❰ Blocking ❱❱
+          Avoid 'gets()'. This function does not consider buffer boundaries and can lead to buffer overflows.
+          Use 'fgets()' or 'gets_s()' instead.                                                               
+          Details: https://sg.run/dKqX                                                                       
+                                                                                                             
+           18┆ gets(username);
+            ⋮┆----------------------------------------
+           20┆ gets(password);
+
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 2 (2 blocking)
+ • Rules run: 26
+ • Targets scanned: 11
+ • Parsed lines: ~100.0%
+ • Scan was limited to files tracked by git
+ • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+Ran 26 rules on 11 files: 2 findings.
