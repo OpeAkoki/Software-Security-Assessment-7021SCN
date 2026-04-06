@@ -3,19 +3,40 @@
 ┌─────────────┐
 │ Scan Status │
 └─────────────┘
-  Scanning 11 files tracked by git with 546 Code rules:
+  Scanning 4 files tracked by git with 1063 Code rules:
                                                                                                                         
   Language      Rules   Files          Origin      Rules                                                                
  ─────────────────────────────        ───────────────────                                                               
-  <multilang>       5      11          Community     546                                                                
-  c                 2       2                                                                                           
-  yaml             19       1                                                                                           
+  <multilang>      47       4          Community    1063                                                                
+  c                 5       2                                                                                           
                                                                                                                         
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 4 (4 blocking)
+ • Rules run: 52
+ • Targets scanned: 4
+ • Parsed lines: ~100.0%
+ • Scan was limited to files tracked by git
+ • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+Ran 52 rules on 4 files: 4 findings.
                    
                    
 ┌─────────────────┐
-│ 2 Code Findings │
+│ 4 Code Findings │
 └─────────────────┘
+                                 
+    task-a-vulnerability/secure.c
+    ❯❱ c.lang.security.insecure-use-scanf-fn.insecure-use-scanf-fn
+          ❰❰ Blocking ❱❱
+          Avoid using 'scanf()'. This function, when used improperly, does not consider buffer boundaries and
+          can lead to buffer overflows. Use 'fgets()' instead for reading input.                             
+          Details: https://sg.run/nd1g                                                                       
+                                                                                                             
+           49┆ scanf("%15s", name);
                                      
     task-a-vulnerability/vulnerable.c
    ❯❯❱ c.lang.security.insecure-use-gets-fn.insecure-use-gets-fn
@@ -27,17 +48,12 @@
            18┆ gets(username);
             ⋮┆----------------------------------------
            20┆ gets(password);
+   
+    ❯❱ c.lang.security.insecure-use-scanf-fn.insecure-use-scanf-fn
+          ❰❰ Blocking ❱❱
+          Avoid using 'scanf()'. This function, when used improperly, does not consider buffer boundaries and
+          can lead to buffer overflows. Use 'fgets()' instead for reading input.                             
+          Details: https://sg.run/nd1g                                                                       
+                                                                                                             
+           33┆ scanf("%s", name);
 
-                
-                
-┌──────────────┐
-│ Scan Summary │
-└──────────────┘
-✅ Scan completed successfully.
- • Findings: 2 (2 blocking)
- • Rules run: 26
- • Targets scanned: 11
- • Parsed lines: ~100.0%
- • Scan was limited to files tracked by git
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
-Ran 26 rules on 11 files: 2 findings.
