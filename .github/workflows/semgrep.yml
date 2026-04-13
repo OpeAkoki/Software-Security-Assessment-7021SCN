@@ -18,10 +18,10 @@ jobs:
         run: pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep scan --config p/c --config p/owasp-top-ten . 2>&1 | tee semgrep_output.txt
+        run: semgrep scan --config p/c --config p/owasp-top-ten . 2>&1 | tee task-c-static-analysis/semgrep_output.txt
 
       - name: Upload Semgrep results
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-results
-          path: semgrep_output.txt
+          path: task-c-static-analysis/semgrep_output.txt

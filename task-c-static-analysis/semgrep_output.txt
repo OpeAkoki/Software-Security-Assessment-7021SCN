@@ -3,12 +3,17 @@
 ┌─────────────┐
 │ Scan Status │
 └─────────────┘
-  Scanning 4 files tracked by git with 1063 Code rules:
+  Scanning 25 files tracked by git with 546 Code rules:
                                                                                                                         
   Language      Rules   Files          Origin      Rules                                                                
  ─────────────────────────────        ───────────────────                                                               
-  <multilang>      47       4          Community    1063                                                                
-  c                 5       2                                                                                           
+  <multilang>       5      25          Community     546                                                                
+  json              3       3                                                                                           
+  c                 2       2                                                                                           
+  js               65       1                                                                                           
+  yaml             19       1                                                                                           
+  dockerfile        4       1                                                                                           
+  html              1       1                                                                                           
                                                                                                                         
                 
                 
@@ -16,27 +21,18 @@
 │ Scan Summary │
 └──────────────┘
 ✅ Scan completed successfully.
- • Findings: 4 (4 blocking)
- • Rules run: 52
- • Targets scanned: 4
+ • Findings: 3 (3 blocking)
+ • Rules run: 99
+ • Targets scanned: 25
  • Parsed lines: ~100.0%
  • Scan was limited to files tracked by git
  • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
-Ran 52 rules on 4 files: 4 findings.
+Ran 99 rules on 25 files: 3 findings.
                    
                    
 ┌─────────────────┐
-│ 4 Code Findings │
+│ 3 Code Findings │
 └─────────────────┘
-                                 
-    task-a-vulnerability/secure.c
-    ❯❱ c.lang.security.insecure-use-scanf-fn.insecure-use-scanf-fn
-          ❰❰ Blocking ❱❱
-          Avoid using 'scanf()'. This function, when used improperly, does not consider buffer boundaries and
-          can lead to buffer overflows. Use 'fgets()' instead for reading input.                             
-          Details: https://sg.run/nd1g                                                                       
-                                                                                                             
-           49┆ scanf("%15s", name);
                                      
     task-a-vulnerability/vulnerable.c
    ❯❯❱ c.lang.security.insecure-use-gets-fn.insecure-use-gets-fn
@@ -48,12 +44,15 @@ Ran 52 rules on 4 files: 4 findings.
            18┆ gets(username);
             ⋮┆----------------------------------------
            20┆ gets(password);
-   
-    ❯❱ c.lang.security.insecure-use-scanf-fn.insecure-use-scanf-fn
+                                     
+    task-e-sbom-compliance/Dockerfile
+   ❯❯❱ dockerfile.security.missing-user.missing-user
           ❰❰ Blocking ❱❱
-          Avoid using 'scanf()'. This function, when used improperly, does not consider buffer boundaries and
-          can lead to buffer overflows. Use 'fgets()' instead for reading input.                             
-          Details: https://sg.run/nd1g                                                                       
-                                                                                                             
-           33┆ scanf("%s", name);
+          By not specifying a USER, a program in the container may run as 'root'. This is a security hazard.
+          If an attacker can control a process running as root, they may have control over the container.   
+          Ensure that the last USER in a Dockerfile is a USER other than 'root'.                            
+          Details: https://sg.run/Gbvn                                                                      
+                                                                                                            
+           ▶▶┆ Autofix ▶ USER non-root CMD ["node", "index.js"]
+            6┆ CMD ["node", "index.js"]
 
