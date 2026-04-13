@@ -1,25 +1,32 @@
 SSDF Compliance Mapping
 
-This document maps portfolio artifacts to NIST Secure Software Development Framework (SSDF) practices.
+This maps each portfolio task to a practice in the NIST Secure Software Development Framework (SSDF).
 
 SSDF Practice ID | Practice Name | How the portfolio satisfies it | File location
 ---|---|---|---
-PO.1.1 | Define security requirements | The STRIDE threat model defines security requirements for the NHS appointment system across all six threat categories. Fourteen formal security requirements (SR-01 to SR-14) were derived directly from the threat analysis and each traces back to a specific threat row. | task-b-threat-model/stride_model.md
-PO.3.1 | Create and maintain a secure development environment | GitHub Actions runs Semgrep on every push to main, ensuring the pipeline automatically checks for insecure code patterns before any changes are merged. | .github/workflows/semgrep.yml
-PW.1.1 | Design software to meet security requirements | secure.c was written to address the exact vulnerabilities identified in vulnerable.c, replacing gets() with fgets(), strcpy() with strncpy(), and unbounded scanf() with a width-limited format specifier. Each fix references CERT C STR31-C. | task-a-vulnerability/secure.c
-PW.4.1 | Reuse secured software components | Syft was used to generate a full CycloneDX SBOM of the Docker image, listing every dependency and its version. Grype then scanned the SBOM against the NVD to identify known vulnerable components, satisfying the requirement to verify third-party software before use. | task-e-sbom-compliance/sbom.json, grype_output.txt
-PW.5.1 | Create source code by following secure coding practices | Semgrep scanned the codebase using the p/c and OWASP Top Ten rule sets. The triage notes document each finding, classify true and false positives, and explain the root cause of each issue. | task-c-static-analysis/semgrep_output.txt, triage_notes.md
-RV.1.1 | Identify and confirm vulnerabilities | Grype scanned the SBOM and identified 61 vulnerabilities across the Docker image including High severity CVEs in libcrypto3, libssl3, and the node binary itself. The output is saved and committed as evidence. | task-e-sbom-compliance/grype_output.txt
-RV.1.2 | Assess the exploitability of vulnerabilities | The pentest log documents SQL injection and reflected XSS findings against DVWA with proof of concept inputs, Burp Suite evidence, and CWE references, demonstrating active exploitation of known vulnerability classes. | task-d-dynamic-analysis/pentest_log.md
-RV.2.1 | Fix vulnerabilities and track their resolution | vulnerable.c documents the insecure code and secure.c provides the fixed version. The Semgrep triage notes explain why each fix addresses the flagged issue and reference the relevant CERT C rule. | task-a-vulnerability/vulnerable.c, secure.c
+PO.1.1 | Define security requirements | The STRIDE threat model works out what could go wrong with the NHS appointment system and turns that into a list of 14 security requirements. Each requirement traces back to a specific threat in the table. | task-b-threat-model/stride_model.md
+
+PO.3.1 | Keep the build environment secure | GitHub Actions runs Semgrep every time code is pushed to main. So any new code gets scanned for security issues automatically before it stays in the repo. | .github/workflows/semgrep.yml
+
+PW.1.1 | Build software to meet security requirements | secure.c was written to fix the exact problems found in vulnerable.c. Every unsafe function was replaced with a safer one and each change is commented with the relevant rule. | task-a-vulnerability/secure.c
+
+PW.4.1 | Check third-party components before using them | Syft was used to list every package inside the Docker image. Grype then checked that list against a public database of known vulnerabilities to see what needs fixing. | task-e-sbom-compliance/sbom.json, grype_output.txt
+
+PW.5.1 | Write code securely | Semgrep scanned the whole codebase and the triage notes explain each finding, whether it is a real problem or a false alarm, and why. | task-c-static-analysis/semgrep_output.txt, triage_notes.md
+
+RV.1.1 | Find vulnerabilities | Grype found 61 issues in the Docker image including several high severity ones in the SSL libraries and the Node runtime. The full list is saved in grype_output.txt. | task-e-sbom-compliance/grype_output.txt
+
+RV.1.2 | Check if vulnerabilities can actually be exploited | The pentest log shows SQL injection and XSS being exploited against DVWA with the actual inputs used and screenshots from Burp Suite as proof. | task-d-dynamic-analysis/pentest_log.md
+
+RV.2.1 | Fix vulnerabilities | vulnerable.c shows the broken code and secure.c shows the fixed version. The triage notes explain why each fix works. | task-a-vulnerability/vulnerable.c, secure.c
 
 
-Comparison of SSDF and NCSC Secure Development Guidance
+SSDF vs NCSC Secure Development Guidance
 
-The NIST SSDF and the NCSC Secure Development and Deployment guidance share the same goal of building security into the development process rather than bolting it on at the end, but they take different approaches in how they present that goal.
+Both SSDF and the NCSC Secure Development and Deployment guidance are trying to get developers to think about security throughout the build process rather than just at the end. But they go about it differently.
 
-The SSDF is structured around discrete, auditable practices with unique IDs like PO.1.1 and RV.1.1. Each practice has a clear description and expected outputs which makes it straightforward to map evidence against specific requirements. This makes SSDF well suited to formal compliance exercises and procurement contexts where an organisation needs to demonstrate exactly how it meets each requirement. The tradeoff is that it can feel bureaucratic and the practice descriptions are deliberately technology-agnostic, which means teams sometimes need to do a lot of interpretation before the guidance becomes actionable.
+SSDF gives everything a reference number like PO.1.1 so you can point to specific practices and show evidence against each one. That makes it useful when you need to prove to someone outside the team, like a client or an auditor, that you have done certain things. The downside is it takes some work to translate the practice descriptions into actual tasks because they are written to be generic enough to apply to any technology.
 
-The NCSC guidance is more principles-based and written in plain language. It covers similar ground including threat modelling, dependency management, secure configuration, and vulnerability disclosure but frames everything as practical advice rather than auditable controls. It is easier to read and follow for a development team that does not have a compliance background, but it is harder to use as evidence in a formal audit because there are no practice IDs to map against.
+The NCSC guidance is more like a set of tips written in plain English. It covers similar ground but reads more like advice than a checklist. A developer who has never done a security course could pick it up and understand what to do. The tradeoff is that it is harder to use as formal evidence because there are no IDs to reference.
 
-In practice the two are complementary. NCSC guidance is useful for day to day secure development decisions while SSDF provides the structure needed to demonstrate compliance to a regulator or client. For an NHS-facing system both would be relevant given the combination of clinical safety requirements and the need to satisfy NHS Digital and ICO scrutiny.
+In practice you would probably use both. The NCSC guidance helps the team make good decisions day to day. The SSDF gives you the structure to show your work to anyone who needs to audit it. For something like an NHS system both would be relevant because you have to satisfy both clinical safety requirements and data protection rules at the same time.
